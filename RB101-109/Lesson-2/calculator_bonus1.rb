@@ -11,7 +11,10 @@ def prompt(message)
 end
 
 def valid_number?(num)
-  num.to_i() >= 0
+# Regarding Feedback: I eventually realized that this does not
+# work out when you enter any letters. Missed that in my
+# initial tests.
+  num.to_i() >= 0 
 #  num.to_i.to_s == num
 end
 
