@@ -10,25 +10,31 @@ def prompt(message)
   Kernel.puts("=> #{message}")
 end
 
-def valid_number?(num)
-# Regarding Feedback: I eventually realized that this does not
-# work out when you enter any letters. Missed that in my
-# initial tests.
-#  num.to_i() >= 0
+def integer?(num)
   num.to_i.to_s == num
 end
 
+def float?(num)
+  num.to_f.to_s == num
+end
+
+def number?(num)
+  integer?(num) || float?(num)
+end
+
 def operation_to_message(op)
-  case op
-  when '1'
-    'Adding'
-  when '2'
-    'Subtracting'
-  when '3'
-    'Multiplying'
-  when '4'
-    'Dividing'
-  end
+  message = case op
+            when '1'
+              'Adding'
+            when '2'
+              'Subtracting'
+            when '3'
+              'Multiplying'
+            when '4'
+              'Dividing'
+            end
+  # More code here
+  message
 end
 
 prompt("Welcome to Calculator! Enter your name:")
@@ -52,7 +58,7 @@ loop do # Main Loop
     prompt("What's the first number?")
     number1 = Kernel.gets().chomp()
 
-    if valid_number?(number1)
+    if number?(number1)
       break
     else
       prompt("Hmm... that doesn't look like a valid number")
@@ -64,7 +70,7 @@ loop do # Main Loop
     prompt("What's the second number?")
     number2 = Kernel.gets().chomp()
 
-    if valid_number?(number2)
+    if number?(number2)
       break
     else
       prompt("Hmm... that doesn't look like a valid number")

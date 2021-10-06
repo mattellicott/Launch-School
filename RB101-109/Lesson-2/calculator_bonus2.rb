@@ -10,12 +10,16 @@ def prompt(message)
   Kernel.puts("=> #{message}")
 end
 
-def valid_number?(num)
-# Regarding Feedback: I eventually realized that this does not
-# work out when you enter any letters. Missed that in my
-# initial tests.
-#  num.to_i() >= 0
+def integer?(num)
   num.to_i.to_s == num
+end
+
+def float?(num)
+  num.to_f.to_s == num
+end
+
+def number?(num)
+  integer?(num) || float?(num)
 end
 
 def operation_to_message(op)
@@ -52,7 +56,7 @@ loop do # Main Loop
     prompt("What's the first number?")
     number1 = Kernel.gets().chomp()
 
-    if valid_number?(number1)
+    if number?(number1)
       break
     else
       prompt("Hmm... that doesn't look like a valid number")
@@ -64,7 +68,7 @@ loop do # Main Loop
     prompt("What's the second number?")
     number2 = Kernel.gets().chomp()
 
-    if valid_number?(number2)
+    if number?(number2)
       break
     else
       prompt("Hmm... that doesn't look like a valid number")

@@ -1,0 +1,49 @@
+en:
+  lang: |
+    Choose a language:
+    1) ENGLISH
+    2) ESPANOL
+  greeting: "Welcome to the Calculator! Enter your name:"
+  hi: "Hi,"
+  valid_name: "Make sure to use a valid name."
+  operator_prompt: |
+    What operation would you like to perform?
+    1) add
+    2) subtract
+    3) multiply
+    4) divide
+  num1: "What's the first number?"
+  num2: "What's the second number?"
+  op_to_msg: "the two numbers..."
+  invalid_num: "Hmm... that doesn't look like a valid number"
+  add: "Adding"
+  sub: "Subtracting"
+  mul: "Multiplying"
+  div: "Dividing"
+  choose: "Must choose 1, 2, 3, or 4"
+  res: "The result is"
+  repeat_op: "Do you want to perform another operation? (Y to calculate again)"
+  bye: "Thank you for using the calculator. Good bye!"
+
+es:
+  greeting: "¡Bienvenido a la Calculadora! Ingresa tu nombre:"
+  hi: "Hola,"
+  valid_name: "Asegúrate de usar un nombre válido."
+  operator_prompt: |
+    ¿Qué operación le gustaría realizar?
+    1) agregar
+    2) restar
+    3) multiplicar
+    4) dividir
+  num1: "¿Cuál es el primer número?"
+  num2: "¿Cuál es el segundo número?"
+  op_to_msg: "los dos números ..."
+  invalid_num: "Hmm ... eso no parece un número válido"
+  add: "Añadiendo"
+  sub: "Restar"
+  mul: "Multiplicar"
+  div: "Divisor"
+  choose: "Debe elegir 1, 2, 3 o 4"
+  res: "El resultado es"
+  repeat_op: "¿Quieres realizar otra operación? (Y para calcular de nuevo)"
+  bye: "Gracias por usar la calculadora. ¡Adiós!"
