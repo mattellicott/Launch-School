@@ -17,6 +17,13 @@ def prompt(string)
   print "#{string} => "
 end
 
+def greeting
+  system("clear")
+  puts "Welcome to Rocks, Paper, Scissors, Spock, Lizard!"
+  puts "Press ENTER to continue."
+  gets
+end
+
 def choose_your_weapon
   choice = ''
   loop do
@@ -83,6 +90,7 @@ def display_grand_winner(player, computer)
   puts "THE COMPUTER IS THE GRAND WINNER!" if computer == 3
 end
 
+greeting()
 # Main loop
 loop do
   system("clear")
