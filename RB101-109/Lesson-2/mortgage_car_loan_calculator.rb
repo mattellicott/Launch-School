@@ -15,7 +15,7 @@ def get_valid_number(duration = 'false')
           else
             -1
           end
-    # Break if num is 0 and a duration
+    # Break if num is 0 and requesting a duration
     break if (num == 0) && (duration == 'true')
     # Otherwise, break if num is positive
     break if num.positive?
@@ -24,22 +24,44 @@ def get_valid_number(duration = 'false')
   num
 end
 
-# Prompt for, and retrieve data
-prompt(MESSAGES['loan'])
-loan_amount = get_valid_number()
-prompt(MESSAGES['apr'])
-loan_apr = (get_valid_number() / 12) / 100
-prompt(MESSAGES['years'])
-loan_duration_years = get_valid_number('true')
-prompt(MESSAGES['months'])
-loan_duration_months = get_valid_number('true')
+def run_again?
+  prompt(MESSAGES['run_again'])
+  loop do
+    case gets.chomp.downcase
+    when 'y'
+      return true
+    when 'n'
+      puts "Goodbye!"
+      return false
+    end
+    prompt(MESSAGES['invalid'])
+  end
+end
 
-# Perform Calculations
-loan_duration = ((loan_duration_years * 12) + loan_duration_months).to_i
-monthly_payment = (loan_amount * (loan_apr /
-                  (1 - (1 + loan_apr)**(-loan_duration)))).round(2)
+# Main loop
+loop do
+  system("clear")
+  prompt(MESSAGES['welcome'])
 
-# Print results
-puts "\nMonthly interest rate: #{format('%11.10s', loan_apr)}%"
-puts "Loan duration: #{format('%13.10s', loan_duration)} months"
-puts "Monthly payment: #{format('%18.11s', "\$#{monthly_payment}")}"
+  # Prompt for, and retrieve data
+  prompt(MESSAGES['loan'])
+  loan_amount = get_valid_number()
+  prompt(MESSAGES['apr'])
+  loan_apr = (get_valid_number() / 12) / 100
+  prompt(MESSAGES['years'])
+  loan_duration_years = get_valid_number('true')
+  prompt(MESSAGES['months'])
+  loan_duration_months = get_valid_number('true')
+
+  # Perform Calculations
+  loan_duration = ((loan_duration_years * 12) + loan_duration_months).to_i
+  monthly_payment = (loan_amount *
+    (loan_apr / (1 - (1 + loan_apr)**(-loan_duration)))).round(2)
+
+  # Print results
+  puts "\nMonthly interest rate: #{format('%11.10s', loan_apr)}%"
+  puts "Loan duration: #{format('%13.10s', loan_duration)} months"
+  puts "Monthly payment: #{format('%18.11s', "\$#{monthly_payment}")}\n\n"
+
+  break unless run_again?
+end
