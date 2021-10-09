@@ -1,5 +1,5 @@
 require 'yaml'
-PROMPTS = YAML.load_file('mortgage_car_loan_calculator.yml')
+MESSAGES = YAML.load_file('mortgage_car_loan_calculator.yml')
 
 def prompt(message)
   print(message)
@@ -19,19 +19,19 @@ def get_valid_number(duration = 'false')
     break if (num == 0) && (duration == 'true')
     # Otherwise, break if num is positive
     break if num.positive?
-    prompt(PROMPTS['invalid'])
+    prompt(MESSAGES['invalid'])
   end
   num
 end
 
 # Prompt for, and retrieve data
-prompt(PROMPTS['loan'])
+prompt(MESSAGES['loan'])
 loan_amount = get_valid_number()
-prompt(PROMPTS['apr'])
+prompt(MESSAGES['apr'])
 loan_apr = (get_valid_number() / 12) / 100
-prompt(PROMPTS['years'])
+prompt(MESSAGES['years'])
 loan_duration_years = get_valid_number('true')
-prompt(PROMPTS['months'])
+prompt(MESSAGES['months'])
 loan_duration_months = get_valid_number('true')
 
 # Perform Calculations
