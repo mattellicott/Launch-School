@@ -19,7 +19,16 @@ end
 
 def greeting
   system("clear")
-  puts "Welcome to Rocks, Paper, Scissors, Spock, Lizard!"
+  puts "Welcome to Rocks, Paper, Scissors, Spock, Lizard!\n\n"
+  puts "RULES:"
+  puts "You will be playing against the Computer."
+  puts "Each weapon is ineffective against itself."
+  puts "Rock beats Scissors and Lizard."
+  puts "Paper beats Rock and Spock."
+  puts "Scissors beats Paper and Lizard."
+  puts "Spock beats Rock and Scissors."
+  puts "Lizard beats Paper and Spock."
+  puts "First to 3 wins becomes the Grand Winner!\n\n"
   puts "Press ENTER to continue."
   gets
 end
