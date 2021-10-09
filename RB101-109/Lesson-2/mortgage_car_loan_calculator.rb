@@ -36,7 +36,8 @@ loan_duration_months = get_valid_number('true')
 
 # Perform Calculations
 loan_duration = ((loan_duration_years * 12) + loan_duration_months).to_i
-monthly_payment = (loan_amount * (loan_apr / (1 - (1 + loan_apr)**(-loan_duration)))).round(2)
+monthly_payment = (loan_amount * (loan_apr /
+                  (1 - (1 + loan_apr)**(-loan_duration)))).round(2)
 
 # Print results
 puts "\nMonthly interest rate: #{format('%11.10s', loan_apr)}%"
