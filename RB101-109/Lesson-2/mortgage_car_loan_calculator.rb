@@ -5,7 +5,8 @@ def prompt(message)
   print(message)
 end
 
-def get_valid_number(duration = 'false')
+def get_valid_number(message)
+  prompt(MESSAGES[message])
   num = ''
   loop do
     num = gets.chomp
@@ -15,8 +16,8 @@ def get_valid_number(duration = 'false')
           else
             -1
           end
-    # Break if num is 0 and requesting a duration
-    break if (num == 0) && (duration == 'true')
+    # Break if num is 0 and requesting a years or months
+    break if (num == 0) && ((message == 'years') || (message == 'months'))
     # Otherwise, break if num is positive
     break if num.positive?
     prompt(MESSAGES['invalid'])
@@ -44,14 +45,10 @@ loop do
   prompt(MESSAGES['welcome'])
 
   # Prompt for, and retrieve data
-  prompt(MESSAGES['loan'])
-  loan_amount = get_valid_number()
-  prompt(MESSAGES['apr'])
-  loan_apr = (get_valid_number() / 12) / 100
-  prompt(MESSAGES['years'])
-  loan_duration_years = get_valid_number('true')
-  prompt(MESSAGES['months'])
-  loan_duration_months = get_valid_number('true')
+  loan_amount = get_valid_number('loan')
+  loan_apr = (get_valid_number('apr') / 12) / 100
+  loan_duration_years = get_valid_number('years')
+  loan_duration_months = get_valid_number('months')
 
   # Perform Calculations
   loan_duration = ((loan_duration_years * 12) + loan_duration_months).to_i
