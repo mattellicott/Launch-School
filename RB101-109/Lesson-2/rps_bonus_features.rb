@@ -1,5 +1,6 @@
 VALID_CHOICES_SHORT = %w(r p sc sp l)
 VALID_CHOICES_NORMAL = %w(ROCK PAPER SCISSORS SPOCK LIZARD)
+ROUNDS_TO_WIN = 3
 RESULT = {
   ROCK: { ROCK: 'Tie', PAPER: 'Lose', SCISSORS: 'Win', SPOCK: 'Lose',
           LIZARD: 'Win' },
@@ -19,17 +20,22 @@ end
 
 def greeting
   system("clear")
-  puts "Welcome to Rocks, Paper, Scissors, Spock, Lizard!\n\n"
-  puts "RULES:"
-  puts "You will be playing against the Computer."
-  puts "Each weapon is ineffective against itself."
-  puts "Rock beats Scissors and Lizard."
-  puts "Paper beats Rock and Spock."
-  puts "Scissors beats Paper and Lizard."
-  puts "Spock beats Rock and Scissors."
-  puts "Lizard beats Paper and Spock."
-  puts "First to 3 wins becomes the Grand Winner!\n\n"
-  puts "Press ENTER to continue."
+  puts <<-MSG
+  Welcome to Rocks, Paper, Scissors, Spock, Lizard!\n\n
+  RULES:
+
+  ROCK beats Scissors and Lizard.
+  PAPER beats Rock and Spock.
+  SCISSORS beats Paper and Lizard.
+  SPOCK beats Rock and Scissors.
+  LIZARD beats Paper and Spock.
+
+  Each weapon is ineffective against itself.
+  You will be playing against the Computer.
+  First to 3 wins becomes the Grand Winner!\n\n
+
+  Press ENTER to continue.
+  MSG
   gets
 end
 
@@ -69,11 +75,14 @@ def tally_score(num1, num2)
 end
 
 def play_again?
-  prompt("Do you want to play again ? (Yes or No)")
+  prompt("Do you want to play again ? (Y)es or (N)o")
   loop do
-    answer = gets.chomp.scan(/\D/).join.downcase
-    return true if answer.start_with?('y')
-    return false if answer.start_with?('n')
+    case gets.chomp.downcase
+    when 'y', 'yes'
+      return true
+    when 'n', 'no'
+      return false
+    end
     prompt("That is a not a valid choice.")
   end
 end
@@ -82,21 +91,28 @@ def display_round(player, computer)
   player_result = RESULT[:"#{player}"][:"#{computer}"]
   computer_result = RESULT[:"#{computer}"][:"#{player}"]
   puts "#########################################"
-  puts "# PLAYER: #{format('%8s', player.to_s)} \# COMPUTER: #{format('%8s', computer.to_s)} #"
-  puts "##{format('%11s', player_result.to_s)}!      # #{format('%10s', computer_result.to_s)}! #{format('%8s', '#')}"
+  puts "# PLAYER: #{format('%8s', player.to_s)} "\
+       "# COMPUTER: #{format('%8s', computer.to_s)} #"
+  puts "##{format('%11s', player_result.to_s)}!      "\
+       "# #{format('%10s', computer_result.to_s)}! #{format('%8s', '#')}"
 end
 
 def display_score(player, computer)
-  puts "# PLAYER: #{format('%8s', player.to_s)} \# COMPUTER: #{format('%8s', computer.to_s)} #"
+  puts "# PLAYER: #{format('%8s', player.to_s)} "\
+       "# COMPUTER: #{format('%8s', computer.to_s)} #"
   puts "#########################################"
   puts "Press ENTER to continue."
   gets
   system("clear")
 end
 
+def game_over?(player, computer)
+  (player == 3) || (computer == 3)
+end
+
 def display_grand_winner(player, computer)
-  puts "YOU ARE THE GRAND WINNER!" if player == 3
-  puts "THE COMPUTER IS THE GRAND WINNER!" if computer == 3
+  puts "YOU ARE THE GRAND WINNER!" if player == ROUNDS_TO_WIN
+  puts "THE COMPUTER IS THE GRAND WINNER!" if computer == ROUNDS_TO_WIN
 end
 
 greeting()
@@ -117,9 +133,9 @@ loop do
     display_grand_winner(player_score, computer_score) if (player_score == 3) ||
                                                           (computer_score == 3)
 
-    break if (player_score == 3) || (computer_score == 3)
+    break if game_over?(player_score, computer_score)
   end
 
-  break if play_again?() == false
+  break unless play_again?()
 end
 puts "Thank you for playing. Goodbye!"
