@@ -5,33 +5,39 @@ def prompt(message)
   print(message)
 end
 
-def get_valid_number(message)
+def get_valid_number(message, can_be_zero: false)
   prompt(MESSAGES[message])
   num = ''
   loop do
     num = gets.chomp
-    num = case num.scan(/\D/)
-          when []
-            num.to_f
-          else
-            -1
-          end
-    # Break if num is 0 and requesting a years or months
-    break if (num == 0) && ((message == 'years') || (message == 'months'))
-    # Otherwise, break if num is positive
-    break if num.positive?
+    if (message == 'months') || (message == 'years')
+      num = num.to_i
+      # Break if input is > 0, or is 0 AND can_be_zero is TRUE
+      break if (num > 0) || ((num == 0) && can_be_zero)
+    else
+      num = num.to_f
+      break if num.positive?
+    end
     prompt(MESSAGES['invalid'])
   end
   num
+end
+
+def calc_duration(years, months)
+  ((years * 12) + months).to_i
+end
+
+def calc_payments(amount, apr, duration)
+  (amount * (apr / (1 - (1 + apr)**(-duration)))).round(2)
 end
 
 def run_again?
   prompt(MESSAGES['run_again'])
   loop do
     case gets.chomp.downcase
-    when 'y'
+    when 'y', 'yes'
       return true
-    when 'n'
+    when 'n', 'no'
       puts "Goodbye!"
       return false
     end
@@ -47,13 +53,16 @@ loop do
   # Prompt for, and retrieve data
   loan_amount = get_valid_number('loan')
   loan_apr = (get_valid_number('apr') / 12) / 100
-  loan_duration_years = get_valid_number('years')
-  loan_duration_months = get_valid_number('months')
+  loan_duration_years = get_valid_number('years', can_be_zero: true)
+  loan_duration_months = if loan_duration_years > 0
+                           get_valid_number('months', can_be_zero: true)
+                         else
+                           get_valid_number('months', can_be_zero: false)
+                         end
 
-  # Perform Calculations
-  loan_duration = ((loan_duration_years * 12) + loan_duration_months).to_i
-  monthly_payment = (loan_amount *
-    (loan_apr / (1 - (1 + loan_apr)**(-loan_duration)))).round(2)
+  # Perform calculations
+  loan_duration = calc_duration(loan_duration_years, loan_duration_months)
+  monthly_payment = calc_payments(loan_amount, loan_apr, loan_duration)
 
   # Print results
   puts "\nMonthly interest rate: #{format('%11.10s', loan_apr)}%"
