@@ -1,0 +1,26 @@
+---
+:noun:
+- fox
+- dog
+- head
+- leg
+:verb:
+- jumps
+- lifts
+- bites
+- licks
+:adjective:
+- quick
+- lazy
+- sleepy
+- ugly
+:adverb:
+- easily
+- lazily
+- noisily
+- excitedly
+:lines:
+- The %{adjective} brown %{noun} %{adverb}
+- "%{verb} the %{adjective} yellow"
+- "%{noun}, who %{adverb} %{verb} his"
+- "%{noun} and looks around."
