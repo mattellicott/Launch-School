@@ -268,6 +268,7 @@ loop do
 
   loop do
     current_player = start_player
+
     loop do
       display_board(board)
       place_piece!(board, current_player, difficulty)
@@ -286,5 +287,6 @@ loop do
   board = initialize_board
   display_winner(board, score)
   score_data = update_score_history(score_data, score)
+
   break unless play_again?(board)
 end
