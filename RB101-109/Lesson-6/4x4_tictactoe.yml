@@ -1,0 +1,118 @@
+---
+:board: |2
+                    ╔═══════╦═══════╦═══════╦═══════╗
+                    ║       ║       ║       ║       ║
+                    ║   1   ║   2   ║   3   ║   4   ║
+                    ║       ║       ║       ║       ║
+                    ╠═══════╬═══════╬═══════╬═══════╣
+                    ║       ║       ║       ║       ║
+                    ║   5   ║   6   ║   7   ║   8   ║
+                    ║       ║       ║       ║       ║
+                    ╠═══════╬═══════╬═══════╬═══════╣
+                    ║       ║       ║       ║       ║
+                    ║   A   ║   B   ║   C   ║   D   ║
+                    ║       ║       ║       ║       ║
+                    ╠═══════╬═══════╬═══════╬═══════╣
+                    ║       ║       ║       ║       ║
+                    ║   E   ║   F   ║   G   ║   H   ║
+                    ║       ║       ║       ║       ║
+                    ╚═══════╩═══════╩═══════╩═══════╝
+:lines:
+- - '1'
+  - '2'
+  - '3'
+  - '4'
+- - '5'
+  - '6'
+  - '7'
+  - '8'
+- - A
+  - B
+  - C
+  - D
+- - E
+  - F
+  - G
+  - H
+- - '1'
+  - '5'
+  - A
+  - E
+- - '2'
+  - '6'
+  - B
+  - F
+- - '3'
+  - '7'
+  - C
+  - G
+- - '4'
+  - '8'
+  - D
+  - H
+- - '1'
+  - '6'
+  - C
+  - H
+- - '4'
+  - '7'
+  - B
+  - E
+:corners:
+- '1'
+- '4'
+- E
+- H
+:rules: |2
+                             4x4 TIC TAC TOE
+                                  RULES
+
+         1. The game is played on a grid that's 4 by 4 squares.
+
+         2. You choose which mark you would like, X or O. Players take
+            turns putting their marks in empty squares.
+
+         3. First to move is chosen randomly, and then alternates
+            after each round.
+
+         4. Getting 4 marks in a row(up, down, across, or diagonally)
+            earns 2 points.
+
+         5. Marking all four corners earns 1 point.
+
+         6. When no more points can be earned, the round ends.
+
+         7. Points are calculated at the end of the round. The game
+            ends when one, or both, players reaches 10 points.
+
+        **During gameplay, you may enter RULES to see this list again**
+:continue: Press ENTER to continue.
+:invalid: Sorry, that's not a valid choice.
+:layout: |2
+             You will be given a list of availabe choices that
+             corresponds with each of the squares above.
+
+        **During gameplay, you may enter LAYOUT to see this again**
+:name:
+  :message: 'Please tell me your name(up to 8 characters):'
+:difficulty:
+  :message: 'Choose the computer difficulty: (E)asy, (N)ormal, or (H)ard'
+  :choices:
+  - E
+  - EASY
+  - N
+  - NORMAL
+  - H
+  - HARD
+:markers:
+  :message: 'Pick one as your marker, X or O:'
+  :choices:
+  - X
+  - O
+:play_again:
+  :message: Would you like to play again? (Y)es or (N)o
+  :choices:
+  - Y
+  - 'YES'
+  - N
+  - 'NO'
