@@ -157,10 +157,14 @@ def dealer_hits(data)
 end
 
 def busted!(data, player)
+  busted_output(data, player)
+  data[:busted] = true
+end
+
+def busted_output(data, player)
   display_game(data)
   puts "#{player} busted!"
   sleep(1)
-  data[:busted] = true
 end
 
 def display_game(data)
