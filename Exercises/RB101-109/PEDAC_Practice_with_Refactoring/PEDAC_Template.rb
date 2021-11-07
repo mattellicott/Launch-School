@@ -1,7 +1,5 @@
 # Questions:
-# Rules:
-# Explicit:
-# Implicit:
+# Requirements:
 # Input:
 # Output:
 # Algorithm:
