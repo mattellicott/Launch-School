@@ -20,7 +20,7 @@ class FixedArray
   end
 
   def to_s
-    "#{array}"
+    array.to_s
   end
 
   private
@@ -29,7 +29,7 @@ class FixedArray
 end
 
 fixed_array = FixedArray.new(5)
-puts fixed_array[3] == nil
+puts fixed_array[3].nil?
 puts fixed_array.to_a == [nil] * 5
 
 fixed_array[3] = 'a'
@@ -76,4 +76,3 @@ end
 fa = FixedArray.new(50)
 a = fa.to_a
 a.delete_at(0)
-puts fa.to_a.size
