@@ -1,9 +1,69 @@
+require 'pry'
 class Minilang
+  attr_accessor :register, :stack
+  attr_reader :commands
+
   def initialize(commands)
-    @commands = commands.split
     @register = 0
+    # @commands = commands.split.each { |command| interpreter(command) }
+    @stack = []
+    @commands = commands
   end
 
+  def eval
+    binding.pry
+    self.register = 'blah'
+    # commands.split.each do |command|
+    #   binding.pry
+    #   case command
+    #   when /\d/    then register = command.to_i
+    #   when 'PUSH'  then stack.unshift(register)
+    #   when 'ADD'   then register += stack.shift
+    #   when 'SUB'   then register -= stack.shift
+    #   when 'MULT'  then register *= stack.shift
+    #   when 'DIV'   then register /= stack.shift
+    #   when 'MOD'   then register %= stack.shift
+    #   when 'POP'   then register = stack.shift
+    #   when 'PRINT' then puts register
+    #   end
+    # end
+  end
+
+  def integer
+
+  end
+
+  def push
+
+  end
+
+  def add
+
+  end
+
+  def sub
+
+  end
+
+  def mult
+
+  end
+
+  def div
+
+  end
+
+  def mod
+
+  end
+
+  def pop
+
+  end
+
+  def print
+
+  end
 end
 
 Minilang.new('PRINT').eval
