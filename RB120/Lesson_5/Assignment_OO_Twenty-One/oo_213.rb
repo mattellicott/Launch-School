@@ -1,17 +1,78 @@
-require 'pry'
 require 'io/console'
+module Displayable
+  private
 
-class String
-  def red_font
+  def display_choices
+    output_center("(H)it, (S)tay, or (Q)uit")
+    center_cursor
+  end
 
+  def display_selection(message)
+    display_board(extra_line: true)
+    output_center_red(message)
+    center_cursor
+    sleep(1)
+    reset_cursor
+    display_board(extra_line: true)
+    $stdin.iflush
+  end
+
+  def display_board(extra_line: false)
+    verify_window_and_clear_screen
+    display_stats
+    display_hands
+    puts "" if extra_line
+  end
+
+  def display_hands
+    puts ""
+    output_center("PLAYER HANDS                               TOTALS")
+    output_center("Player: #{player}")
+    output_center("Dealer: #{dealer}")
+  end
+
+  def display_stats
+    output_center_red(stats.to_s)
+  end
+
+  def display_welcome_screen
+    single_center_red("Welcome to Twenty-One!")
+  end
+
+  def display_rules
+    single_center_red("These are the rules!")
+  end
+
+  def display_end_round_screen
+    single_center_red("#{stats.round_winner} won Round #{stats.round}")
+  end
+
+  def display_winner_screen
+    verify_window_and_clear_screen
+    if stats.player_score == 5
+      message1 = "YOU WON THE GAME!"
+      message2 = "CONGRATULATIONS"
+    else
+      message1 = "YOU LOST THE GAME!"
+      message2 = "BETTER LUCK NEXT TIME"
+    end
+    double_center_red(message1, message2)
+  end
+
+  def display_goodbye_screen
+    verify_window_and_clear_screen
+    double_center_red("Thanks for playing!", "Goodbye!")
   end
 end
 
-module Displayable
+module DisplayableUtils
   private
-  # height 10
-  # width 50
-  @@window_height, @@window_width = STDIN.winsize
+
+  attr_accessor :window_width
+
+  def initialize
+    @window_width = $stdin.winsize[1]
+  end
 
   def output_center(message, red_font: false)
     if red_font
@@ -27,7 +88,7 @@ module Displayable
 
   def center_cursor
     @cursor_pos = IO.console.cursor
-    IO.console.cursor = [7, @@window_width / 2]
+    IO.console.cursor = [7, window_width / 2]
   end
 
   def reset_cursor
@@ -37,108 +98,44 @@ module Displayable
   def press_key_to_continue
     puts ""
     output_center_red("*Press any key to continue*")
-    STDIN.getch
+    $stdin.getch
   end
 
   def clear_screen
     system 'clear'
   end
 
-  def verify_window_width
+  def verify_window_and_clear_screen
     update_window_width
+    clear_screen
     until window_width >= 50
-      clear_screen
       output_center("Window width too narrow.")
       output_center("Increase by #{50 - window_width} columns to continue.")
       sleep(1)
       update_window_width
+      clear_screen
     end
-    STDIN.iflush
+    $stdin.iflush
   end
 
   def update_window_width
-    @@window_width = STDIN.winsize[1]
+    @window_width = $stdin.winsize[1]
   end
 
-  def window_width
-    @@window_width
-  end
-
-  def display_red_text(message)
-    display_board(extra_line: true)
+  def single_center_red(message)
+    verify_window_and_clear_screen
+    puts "\n" * 3
     output_center_red(message)
-    center_cursor
-    sleep(1)
-    reset_cursor
-    display_board(extra_line: true)
-    STDIN.iflush
-  end
-
-  def display_board(extra_line: false)
-    clear_screen
-    display_stats
-    display_hands
-    puts "" if extra_line
-  end
-
-  def display_hands
-    puts ""
-    output_center("PLAYER HANDS                               TOTALS")
-    output_center("Player: #{player}")
-    output_center("Dealer: #{dealer}")
-  end
-
-  def display_stats
-    output_center_red("#{stats}")
-  end
-
-  def display_welcome_screen
-    clear_screen
-    puts "\n" * 3
-    output_center_red("Welcome to Twenty-One!")
-    puts "\n" * 2
-    press_key_to_continue
-    clear_screen
-  end
-
-  def display_rules
-    clear_screen
-    output_center("These are the rules!")
-    press_key_to_continue
-  end
-
-  def display_end_round_screen
-    clear_screen
-    puts "\n" * 3
-    output_center_red("#{stats.round_winner} won Round #{stats.round}")
     puts "\n" * 2
     press_key_to_continue
   end
 
-  def display_winner_screen
-    if stats.player_score == 5
-      message1 = "CONGRATULATIONS"
-      message2 = "YOU WON THE GAME!"
-    else
-      message1 = "BETTER LUCK NEXT TIME"
-      message2 = "YOU LOST THE GAME!"
-    end
+  def double_center_red(message1, message2)
     clear_screen
     puts "\n" * 2
     output_center_red(message1)
     puts ""
     output_center_red(message2)
-    puts "\n" * 1
-    press_key_to_continue
-    clear_screen
-  end
-
-  def display_goodbye_screen
-    clear_screen
-    puts "\n" * 2
-    output_center_red("Thanks for playing!")
-    puts ""
-    output_center_red("Goodbye!")
     puts "\n" * 1
     press_key_to_continue
     clear_screen
@@ -149,29 +146,12 @@ class Card
   SUITS = %w(C D H S)
   FACES = %w(2 3 4 5 6 7 8 9 10 J Q K A)
 
-  def initialize(suit, face)
-    @suit = suit
+  def initialize(face)
     @face = face
   end
 
   def to_s
     face
-  end
-
-  def ace?
-    face == 'A'
-  end
-
-  def king?
-    face == 'K'
-  end
-
-  def queen?
-    face == 'Q'
-  end
-
-  def jack?
-    face == 'J'
   end
 end
 
@@ -209,15 +189,15 @@ module Hand
   end
 end
 
+# noinspection DuplicatedCode
 class Participant
   include Hand
-  include Displayable
 
-  attr_accessor :cards
+  attr_accessor :cards, :turn
   attr_writer :card_total
 
   def initialize
-    @@current_turn = 'player'
+    @turn = 'player'
     @cards = []
     @card_total = 0
   end
@@ -238,21 +218,19 @@ class Participant
     total
   end
 
-  def current_turn=(player_or_dealer)
-    @@current_turn = player_or_dealer
-  end
-
-  def busted?
+  def bust?
     card_total > 21
   end
 
   def cards_visible
+    format(join_visible_cards, card_total.to_s)
+  end
+
+  def join_visible_cards
     if cards.size > 2
-      format("#{"#{cards[0..-2].join(', ')}, and #{cards.last}"
-                  .ljust(39)}%2s", card_total.to_s)
+      "#{"#{cards[0..-2].join(', ')}, and #{cards.last}".ljust(39)}%2s"
     else
-      format("#{"#{cards.first} and #{cards.last}"
-                  .ljust(39)}%2s", card_total.to_s)
+      "#{"#{cards.first} and #{cards.last}".ljust(39)}%2s"
     end
   end
 
@@ -265,7 +243,7 @@ class Participant
   end
 
   def to_s
-    if @@current_turn == 'dealer' || self.class == Player
+    if turn == 'dealer' || instance_of?(Player)
       cards_visible
     else
       cards_hidden
@@ -291,10 +269,12 @@ end
 
 class TwentyOne
   include Displayable
+  include DisplayableUtils
 
   attr_accessor :deck, :player, :dealer, :stats
 
   def initialize
+    super()
     @deck = Deck.new
     @player = Player.new
     @dealer = Dealer.new
@@ -306,7 +286,7 @@ class TwentyOne
     display_rules
     loop do
       main_game
-      break unless play_again?
+      # break unless play_again?
       reset_game
     end
     display_goodbye_screen
@@ -316,7 +296,7 @@ class TwentyOne
     loop do
       deal_cards
       player_turn
-      dealer_turn unless player.busted?
+      dealer_turn unless player.bust?
       reset_round
       break if winner?
     end
@@ -324,40 +304,50 @@ class TwentyOne
   end
 
   def dealer_turn
-    dealer.current_turn = "dealer"
+    switch_turn_to_dealer
     display_board(extra_line: true)
     sleep(1)
     while dealer.card_total < 17
-      dealer.add_card(deck.deal_one)
-      display_red_text("Dealer hits!")
+      hit('dealer')
     end
-    if dealer.busted?
-      display_red_text("Dealer busted!")
-    else
-      display_red_text("Dealer stays!")
-    end
+    return display_selection("Dealer busted!") if dealer.bust?
+
+    display_selection("Dealer stays!")
   end
 
+  # rubocop:disable Metrics/MethodLength
   def player_turn
     display_board(extra_line: true)
     loop do
-      output_center("(H)it, (S)tay, or (Q)uit")
-      center_cursor
+      display_choices
       case gets.chomp.downcase
-      when 'h', 'hit'
-        player.add_card(deck.deal_one)
-        display_red_text("Player hits!")
+      when 'h', 'hit' then hit('player')
       when 's', 'stay'
-        display_red_text("Player stays!")
+        display_selection("Player stays!")
         break
       when 'q', 'quit' then quit
-      else invalid_choice
+      else invalid_selection
       end
-      if player.busted?
-        display_red_text("Player busts!")
+      if player.bust?
+        display_selection("Player busts!")
         break
       end
     end
+  end
+  # rubocop:enable Metrics/MethodLength
+
+  def switch_turn_to_dealer
+    player.turn = 'dealer'
+    dealer.turn = 'dealer'
+  end
+
+  def hit(person)
+    if person == 'player'
+      player.add_card(deck.deal_one)
+    else
+      dealer.add_card(deck.deal_one)
+    end
+    display_selection("#{person.capitalize} hits!")
   end
 
   def quit
@@ -365,8 +355,8 @@ class TwentyOne
     exit
   end
 
-  def invalid_choice
-    display_red_text("Invalid choice! Try again...")
+  def invalid_selection
+    display_selection("Invalid selection! Try again...")
   end
 
   def deal_cards
@@ -381,15 +371,22 @@ class TwentyOne
   end
 
   def end_round
-    if dealer.busted? || dealer.card_total < player.card_total
-      stats.player_score += 1
-      stats.round_winner = 'Player'
+    if dealer.bust? || (dealer.card_total < player.card_total && !player.bust?)
+      update_score_and_round_winner('Player')
     else
-      stats.dealer_score += 1
-      stats.round_winner = 'Dealer'
+      update_score_and_round_winner('Dealer')
     end
     display_end_round_screen
     stats.round += 1
+  end
+
+  def update_score_and_round_winner(person)
+    if person == 'Player'
+      stats.player_score += 1
+    else
+      stats.dealer_score += 1
+    end
+    stats.round_winner = person
   end
 
   def reset_round
