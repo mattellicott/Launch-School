@@ -1,100 +1,91 @@
-require 'pry'
-class Minilang
-  attr_accessor :register, :stack
-  attr_reader :commands
+class MinilangError < StandardError; end
+class BadTokenError < MinilangError; end
+class EmptyStackError < MinilangError; end
 
+class Minilang
   def initialize(commands)
     @register = 0
-    # @commands = commands.split.each { |command| interpreter(command) }
     @stack = []
-    @commands = commands
+    @commands = commands.split
   end
 
   def eval
-    binding.pry
-    self.register = 'blah'
-    # commands.split.each do |command|
-    #   binding.pry
-    #   case command
-    #   when /\d/    then register = command.to_i
-    #   when 'PUSH'  then stack.unshift(register)
-    #   when 'ADD'   then register += stack.shift
-    #   when 'SUB'   then register -= stack.shift
-    #   when 'MULT'  then register *= stack.shift
-    #   when 'DIV'   then register /= stack.shift
-    #   when 'MOD'   then register %= stack.shift
-    #   when 'POP'   then register = stack.shift
-    #   when 'PRINT' then puts register
-    #   end
-    # end
+    @commands.each do |command|
+      case command
+      when /\d/    then @register = command.to_i
+      when 'PUSH'  then push
+      when 'ADD'   then add
+      when 'SUB'   then sub
+      when 'MULT'  then mult
+      when 'DIV'   then div
+      when 'MOD'   then mod
+      when 'POP'   then pop
+      when 'PRINT' then print_register
+      else raise BadTokenError, "Invalid token: #{command}"
+      end
+    end
   end
 
-  def integer
+  private
 
-  end
+  attr_accessor :register, :stack
 
   def push
-
+    @stack.unshift(register)
   end
 
   def add
-
+    @register += stack.shift
   end
 
   def sub
-
+    @register -= stack.shift
   end
 
   def mult
-
+    @register *= stack.shift
   end
 
   def div
-
+    @register /= stack.shift
   end
 
   def mod
-
+    @register %= stack.shift
   end
 
   def pop
-
+    raise EmptyStackError, "Empty stack!" if stack.empty?
+    @register = stack.shift
   end
 
-  def print
-
+  def print_register
+    puts register
   end
 end
 
 Minilang.new('PRINT').eval
-# 0
-
 Minilang.new('5 PUSH 3 MULT PRINT').eval
-# 15
-
 Minilang.new('5 PRINT PUSH 3 PRINT ADD PRINT').eval
+Minilang.new('5 PUSH 10 PRINT POP PRINT').eval
+Minilang.new('3 PUSH PUSH 7 DIV MULT PRINT ').eval
+Minilang.new('4 PUSH PUSH 7 MOD MULT PRINT ').eval
+Minilang.new('-3 PUSH 5 SUB PRINT').eval
+Minilang.new('6 PUSH').eval
+# 0
+# 15
 # 5
 # 3
 # 8
-
-Minilang.new('5 PUSH 10 PRINT POP PRINT').eval
 # 10
 # 5
+# 6
+# 12
+# 8
+# (nothing printed; no PRINT commands)
 
-Minilang.new('5 PUSH POP POP PRINT').eval
+# Minilang.new('5 PUSH POP POP PRINT').eval
 # Empty stack!
 
-Minilang.new('3 PUSH PUSH 7 DIV MULT PRINT ').eval
-# 6
-
-Minilang.new('4 PUSH PUSH 7 MOD MULT PRINT ').eval
-# 12
-
-Minilang.new('-3 PUSH 5 XSUB PRINT').eval
+# Minilang.new('-3 PUSH 5 XSUB PRINT').eval
 # Invalid token: XSUB
-
-Minilang.new('-3 PUSH 5 SUB PRINT').eval
-# 8
-
-Minilang.new('6 PUSH').eval
-# (nothing printed; no PRINT commands)
