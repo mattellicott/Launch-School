@@ -49,13 +49,13 @@ module Displayable
     end
   end
 
-  def display_rules
+  def display_objective
     verify_window_and_clear_screen
     output_center("-GAME OBJECTIVE-")
-    puts ""
     output_center("Twenty-One is a card game consisting of a player")
     output_center("and a dealer, where the participants try to get ")
     output_center("as close to 21 as possible without going over.  ")
+    output_center("First to win 5 rounds beats the game!")
     puts ""
     press_key_to_continue
   end
@@ -293,7 +293,7 @@ class TwentyOne
   def play
     enter_player_name
     display_welcome_screen
-    display_rules
+    display_objective
     loop do
       main_game
       break unless play_again?
