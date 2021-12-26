@@ -15,54 +15,54 @@ module Displayable
   def display_choices
     display_board
     puts ""
-    output_center("(H)it, (S)tay, or (Q)uit")
+    print_center("(H)it, (S)tay, or (Q)uit")
     center_cursor
   end
 
   def display_end_round
     display_board
     name = round_winner == player.name ? player.name : dealer.name
-    output_center_red("#{name} WON ROUND #{round}")
+    print_center_red("#{name} WON ROUND #{round}")
     press_key_to_continue
   end
 
   def display_goodbye_screen
     verify_window_and_clear_screen
-    double_line("Thanks for playing!", "Goodbye!")
+    print_double_line("Thanks for playing!", "Goodbye!")
   end
 
   def display_hands
-    output_center("PLAYER HANDS                               TOTALS")
+    print_center("PLAYER HANDS                               TOTALS")
     display_player_hand
     display_dealer_hand
   end
 
   def display_player_hand
-    output_center("#{player.name.ljust(6)}: #{player.cards_visible}")
+    print_center("#{player.name.ljust(6)}: #{player.cards_visible}")
   end
 
   def display_dealer_hand
     if turn == 'player'
-      output_center("#{dealer.name.ljust(6)}: #{dealer.cards_hidden}")
+      print_center("#{dealer.name.ljust(6)}: #{dealer.cards_hidden}")
     else
-      output_center("#{dealer.name.ljust(6)}: #{dealer.cards_visible}")
+      print_center("#{dealer.name.ljust(6)}: #{dealer.cards_visible}")
     end
   end
 
   def display_objective
     verify_window_and_clear_screen
-    output_center("-GAME OBJECTIVE-")
-    output_center("Twenty-One is a card game consisting of a player")
-    output_center("and a dealer, where the participants try to get ")
-    output_center("as close to 21 as possible without going over.  ")
-    output_center("First to win 5 rounds beats the game!")
+    print_center("-GAME OBJECTIVE-")
+    print_center("Twenty-One is a card game consisting of a player")
+    print_center("and a dealer, where the participants try to get ")
+    print_center("as close to 21 as possible without going over.  ")
+    print_center("First to win 5 rounds beats the game!")
     puts ""
     press_key_to_continue
   end
 
   def display_selection(message)
     display_board
-    output_center_red(message)
+    print_center_red(message)
     center_cursor
     sleep(1)
     display_board
@@ -72,19 +72,19 @@ module Displayable
   end
 
   def display_stats
-    output_center "#{format('ROUND: %2s', round.to_s)}     "\
+    print_center "#{format('ROUND: %2s', round.to_s)}     "\
     "#{format("#{player.name.rjust(6)} SCORE: %2s", player.score.to_s)}   "\
     "#{format("#{dealer.name.rjust(6)} SCORE: %2s", dealer.score.to_s)}"
   end
 
   def display_turn
     name = @turn == 'player' ? player.name.upcase : 'DEALER'
-    output_center_red("#{name}'S TURN")
+    print_center_red("#{name}'S TURN")
   end
 
   def display_welcome_screen
     verify_window_and_clear_screen
-    double_line("Hello, #{player.name}", "Welcome to Twenty-One!")
+    print_double_line("Hello, #{player.name}", "Welcome to Twenty-One!")
     press_key_to_continue
   end
 
@@ -97,7 +97,7 @@ module Displayable
       message1 = "YOU LOST THE GAME!"
       message2 = "BETTER LUCK NEXT TIME"
     end
-    double_line(message1, message2)
+    print_double_line(message1, message2)
     press_key_to_continue
   end
 end
@@ -111,7 +111,7 @@ module DisplayableUtils
     @window_width = $stdin.winsize[1]
   end
 
-  def output_center(message, red_font: false)
+  def print_center(message, red_font: false)
     if red_font
       puts "\e[31m#{message.center(window_width)}\e[0m"
     else
@@ -119,8 +119,24 @@ module DisplayableUtils
     end
   end
 
-  def output_center_red(message)
-    output_center(message, red_font: true)
+  def print_center_red(message)
+    print_center(message, red_font: true)
+  end
+
+  def print_single_line(message, red: false)
+    verify_window_and_clear_screen
+    puts "\n" * 3
+    red == false ? print_center(message) : print_center_red(message)
+    puts "\n" * 2
+  end
+
+  def print_double_line(message1, message2)
+    verify_window_and_clear_screen
+    puts ""
+    print_center(message1)
+    puts ""
+    print_center(message2)
+    puts "\n" * 2
   end
 
   def center_cursor
@@ -132,7 +148,7 @@ module DisplayableUtils
   end
 
   def press_key_to_continue
-    output_center("*Press any key to continue*")
+    print_center("*Press any key to continue*")
     $stdin.getch
     clear_screen
   end
@@ -142,15 +158,15 @@ module DisplayableUtils
   end
 
   def verify_window_and_clear_screen
-    update_window_width
     clear_screen
+    update_window_width
     verify_window_width
   end
 
   def verify_window_width
     until window_width >= 50
-      output_center("Window width too narrow.")
-      output_center("Increase by #{50 - window_width} columns to continue.")
+      print_center("Window width too narrow.")
+      print_center("Increase by #{50 - window_width} columns to continue.")
       sleep(1)
       update_window_width
       clear_screen
@@ -160,22 +176,6 @@ module DisplayableUtils
 
   def update_window_width
     @window_width = $stdin.winsize[1]
-  end
-
-  def single_line(message, red: false)
-    verify_window_and_clear_screen
-    puts "\n" * 3
-    red == false ? output_center(message) : output_center_red(message)
-    puts "\n" * 2
-  end
-
-  def double_line(message1, message2)
-    verify_window_and_clear_screen
-    puts ""
-    output_center(message1)
-    puts ""
-    output_center(message2)
-    puts "\n" * 2
   end
 end
 
@@ -326,7 +326,7 @@ class TwentyOne
     name = ''
     loop do
       verify_window_and_clear_screen
-      single_line("Enter your name (1-6 alphabetic characters):")
+      print_single_line("Enter your name (1-6 alphabetic characters):")
       name_cursor
       name = gets.chomp
       break if name.scan(/[a-z]/i).join == name && name.size.between?(1, 6)
@@ -336,7 +336,7 @@ class TwentyOne
   end
 
   def invalid_name
-    single_line("Invalid Name. Please try again!")
+    print_single_line("Invalid Name. Please try again!")
     sleep(1)
     $stdin.iflush
   end
@@ -425,13 +425,13 @@ class TwentyOne
 
   def play_again?
     loop do
-      single_line("Would you like to play again? (Y)es or (N)o")
+      print_single_line("Would you like to play again? (Y)es or (N)o")
       center_cursor
       case gets.chomp.downcase
       when 'y', 'yes' then return true
       when 'n', 'no' then return false
       end
-      single_line("Invalid choice! Try again..")
+      print_single_line("Invalid choice! Try again..")
       press_key_to_continue
     end
   end
