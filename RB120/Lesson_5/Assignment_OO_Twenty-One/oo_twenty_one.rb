@@ -105,7 +105,7 @@ end
 module DisplayableUtils
   private
 
-  attr_accessor :window_width
+  attr_reader :window_width
 
   def initialize
     @window_width = $stdin.winsize[1]
@@ -192,8 +192,6 @@ class Card
 end
 
 class Deck
-  attr_accessor :cards
-
   def initialize
     @cards = (Card::FACES * 4).shuffle
   end
@@ -201,6 +199,10 @@ class Deck
   def deal_one
     cards.pop
   end
+
+  private
+
+  attr_reader :cards
 end
 
 class Participant
@@ -277,8 +279,6 @@ end
 class TwentyOne
   include Displayable
   include DisplayableUtils
-
-  attr_accessor :deck, :player, :dealer, :stats, :round, :round_winner, :turn
 
   def initialize
     super
@@ -443,6 +443,10 @@ class TwentyOne
   def winner?
     player.score == 5 || dealer.score == 5
   end
+
+  private
+
+  attr_reader :deck, :player, :dealer, :stats, :round, :round_winner, :turn
 end
 
 TwentyOne.new.play
