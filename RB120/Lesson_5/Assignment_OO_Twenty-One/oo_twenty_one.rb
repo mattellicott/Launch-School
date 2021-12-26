@@ -125,9 +125,9 @@ module DisplayableUtils
 
   def print_single_line(message, red: false)
     verify_window_and_clear_screen
-    puts "\n" * 3
+    puts "", "", ""
     red == false ? print_center(message) : print_center_red(message)
-    puts "\n" * 2
+    puts "", ""
   end
 
   def print_double_line(message1, message2)
@@ -136,7 +136,7 @@ module DisplayableUtils
     print_center(message1)
     puts ""
     print_center(message2)
-    puts "\n" * 2
+    puts "", ""
   end
 
   def center_cursor
@@ -180,7 +180,6 @@ module DisplayableUtils
 end
 
 class Card
-  SUITS = %w(C D H S)
   FACES = %w(2 3 4 5 6 7 8 9 10 J Q K A)
 
   def initialize(face)
