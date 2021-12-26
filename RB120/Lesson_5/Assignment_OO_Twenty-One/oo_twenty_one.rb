@@ -280,8 +280,6 @@ class TwentyOne
   include Displayable
   include DisplayableUtils
 
-  attr_reader :deck, :player, :dealer, :stats, :round, :round_winner, :turn
-
   def initialize
     super
     @deck = Deck.new
@@ -445,6 +443,8 @@ class TwentyOne
   def winner?
     player.score == 5 || dealer.score == 5
   end
+
+  attr_reader :deck, :player, :dealer, :stats, :round, :round_winner, :turn
 end
 
 TwentyOne.new.play
