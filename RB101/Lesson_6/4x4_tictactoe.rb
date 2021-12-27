@@ -1,4 +1,3 @@
-require 'pry'
 require 'yaml'
 
 FILE_DATA = YAML.load_file("4x4_tictactoe.yml")
