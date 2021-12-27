@@ -210,6 +210,9 @@ class Participant
   attr_accessor :cards, :name, :score
   attr_writer :card_total
 
+  MAX_CARD_TOTAL = 21
+  private_constant :MAX_CARD_TOTAL
+
   def initialize
     reset_stats
     @score = 0
@@ -248,8 +251,6 @@ class Participant
   end
 
   private
-
-  MAX_CARD_TOTAL = 21
 
   def add_aces_total(total)
     ace_count = cards.count('A')
@@ -310,6 +311,10 @@ class TwentyOne
   include Displayable
   include DisplayableUtils
 
+  SCORE_TO_WIN = 5
+  STOP_HIT_CARD_TOTAL = 17
+  private_constant :SCORE_TO_WIN, :STOP_HIT_CARD_TOTAL
+
   def initialize
     super
     @deck = Deck.new
@@ -332,9 +337,6 @@ class TwentyOne
   end
 
   private
-
-  SCORE_TO_WIN = 5
-  STOP_HIT_CARD_TOTAL = 17
 
   def main_game
     loop do
