@@ -45,5 +45,5 @@ end
 dog = Animal.new("Dog")
 cat = Animal.new("Cat")
 
-puts dog == cat # Returns false
+puts dog == cat # Outputs => false
 ```
