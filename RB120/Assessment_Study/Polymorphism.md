@@ -1,6 +1,6 @@
 Polymorphism is the ability of objects of different types to respond to messages in the same way.<br>
 
-Both the `Dog` and `Cat` classes have access to the `move` instance method through class inheritance.
+Instances of both the `Dog` and `Cat` classes have access to the `move` instance method through class inheritance.
 ```ruby
 class Animal
   def move

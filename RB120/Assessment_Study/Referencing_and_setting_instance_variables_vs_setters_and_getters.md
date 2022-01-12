@@ -19,7 +19,7 @@ class Animal
   end
 end
 dog = Animal.new
-dog.name # => nil
+dog.name # Returns => nil
 ```
 
 Using a setter:
@@ -37,7 +37,7 @@ class Animal
   attr_reader :name
 end
 dog = Animal.new
-dog.name # => nil
+dog.name # Returns => nil
 ```
 
 To create both setter and getter methods for a variable:
@@ -47,5 +47,5 @@ class Animal
 end
 dog = Animal.new
 dog.name = "Pepper"
-dog.name # Outputs => Pepper
+dog.name # Returns => Pepper
 ```
